@@ -1,0 +1,53 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - v*
+  pull_request:
+  repository_dispatch:
+    types: [run_build]
+
+jobs:
+  build-win:
+    runs-on: ubuntu-latest
+    container: dockcross/windows-static-x86:latest
+    steps:
+
+    - uses: actions/checkout@v2
+    - run: |
+        git fetch --prune --unshallow
+        
+    - name: Compile project
+      run: |
+        DATEE=`date '+[%Y-%m-%d]'`
+        echo "package compiled and released on $DATEE" >>README.TXT
+        echo "Commit  ${{ github.sha }}" >>README.TXT
+        mkdir build
+        cd build
+        cmake .. -DCMAKE_BUILD_TYPE=Release
+        make clean all
+        7z a -t7z Cue2POPS.7z cue2pops.exe ../README.TXT ../PATCHES.TXT
+        
+    - name: Upload artifacts
+      if: ${{ success() }}
+      uses: actions/upload-artifact@v2
+      with:
+        name: Cue2POPS
+        path: |
+             build/Cue2POPS.7z
+             
+    - name: Deploy pre-release
+      uses: softprops/action-gh-release@v1
+      if: (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/main')
+      with:
+        token: "${{ secrets.GITHUB_TOKEN }}"
+        fail_on_unmatched_files: true
+        files: |
+            build/Cue2POPS.7z
+        name: "Latest build"
+        tag_name: "Latest"
+        prerelease: true
+        
