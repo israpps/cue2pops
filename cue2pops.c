@@ -10,9 +10,9 @@
 #include <time.h>
 
 #ifdef DEBUG
-  const int debug = 1;
+  int debug = 1;
 #else
-  const int debug = 0;
+  int debug = 0;
 #endif
 
 const int SECTORSIZE = 2352; // Sector size
@@ -265,6 +265,8 @@ int evaluate_arg(const char *arg, parameters *p)
 		p->vmode = 1;
 	} else if(!strcmp(arg, "trainer")) {
 		p->trainer = 1;
+	} else if(!strcmp(arg, "debug")) {
+		debug = 1;
 	} else {
 		handled = 0;
 	}
@@ -410,6 +412,7 @@ int main(int argc, char **argv)
 		printf("gap-- : Substracts 2 seconds to all track indexes MSF\n");
 		printf("vmode : Attempts to patch the video mode to NTSC and to fix the screen position\n");
 		printf("trainer : Enable cheats\n\n");
+		printf("debug : program behaves as if it was compiled on debug mode\n\n");
 		printf("Examples :\n");
 		printf("%s mygame.cue\n", argv[0]);
 		printf("%s mygame.cue IMAGE0.VCD\n", argv[0]);
