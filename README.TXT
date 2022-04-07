@@ -1,3 +1,5 @@
+recompiled and tweaked by El_isra (thanks to the original author...)
+
 **********************************************
 * BIN/CUE to IMAGE0.VCD conversion tool v2.0 *
 * Last modified : 2013/05/16                 *
