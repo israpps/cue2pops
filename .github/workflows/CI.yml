@@ -29,7 +29,7 @@ jobs:
         cd build
         cmake .. -DCMAKE_BUILD_TYPE=Release
         make clean all
-        7z a -t7z Cue2POPS.7z cue2pops.exe ../README.TXT ../PATCHES.TXT
+        7z a -t7z Cue2POPS.7z cue2pops.exe ../README.TXT ../PATCHES.TXT "../drag&drop.bat"  ../batch_convert.bat
         
     - name: Upload artifacts
       if: ${{ success() }}
