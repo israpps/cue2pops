@@ -1,1 +1,4 @@
 build**
+**.o
+cue2pops-win32/_build/**
+cue2pops-win32/_pbj/**
