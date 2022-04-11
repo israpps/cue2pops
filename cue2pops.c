@@ -233,19 +233,19 @@ int get_file_size(char *file_name)
 	int size;
 
 	if(!(file_handle = fopen(file_name, "rb"))) {
-		printf("Error: Cannot open %s\n\n", file_name);
+		fprintf(stderr, "Error: Cannot open %s\n\n", file_name);
 		return -1;
 	}
 
 	status = fseek(file_handle, 0, SEEK_END);
 	if (status != 0) {
-		printf("Error: Failed to seek %s\n", file_name);
+		fprintf(stderr, "Error: Failed to seek %s\n", file_name);
 		return -1;
 	}
 
 	size = ftell(file_handle);
 	if (size == -1L) {
-		printf("Error: Failed to get file %s size\n", file_name);
+		fprintf(stderr, "Error: Failed to get file %s size\n", file_name);
 		return -1;
 	}
 	fclose(file_handle);
@@ -315,7 +315,7 @@ int convert_file_ending_to_vcd(const char *file_name)
 		return 0;
 	}
 
-	printf("Error: Input argument was not a cue file\n");
+	fprintf(stderr, "Error: Input argument was not a cue file\n");
 	return -2;
 }
 
@@ -404,37 +404,37 @@ int main(int argc, char **argv)
 	printf("Last modified: %s\n\n", __DATE__);
 
 	if(argc <= 1) {
-		printf("Error: No input file specified (cue sheet)\n\n");
-		printf("Usage :\n");
-		printf("%s input.cue <cmd_1> <cmd_2> <cmd_3> <output.vcd>\n\n", argv[0]);
-		printf("Commands are :\n");
-		printf("gap++ : Adds 2 seconds to all track indexes MSF\n");
-		printf("gap-- : Substracts 2 seconds to all track indexes MSF\n");
-		printf("vmode : Attempts to patch the video mode to NTSC and to fix the screen position\n");
-		printf("trainer : Enable cheats\n\n");
-		printf("debug : program behaves as if it was compiled on debug mode\n\n");
-		printf("Examples :\n");
-		printf("%s mygame.cue\n", argv[0]);
-		printf("%s mygame.cue IMAGE0.VCD\n", argv[0]);
-		printf("%s mygame.cue vmode\n", argv[0]);
-		printf("%s mygame.cue gap++\n", argv[0]);
-		printf("%s mygame.cue gap--\n", argv[0]);
-		printf("%s mygame.cue trainer\n", argv[0]);
-		printf("%s mygame.cue vmode IMAGE0.VCD\n", argv[0]);
-		printf("%s mygame.cue gap++ IMAGE0.VCD\n", argv[0]);
-		printf("%s mygame.cue gap-- IMAGE0.VCD\n", argv[0]);
-		printf("%s mygame.cue trainer IMAGE0.VCD\n", argv[0]);
-		printf("%s mygame.cue gap++ vmode\n", argv[0]);
-		printf("%s mygame.cue gap++ trainer\n", argv[0]);
-		printf("%s mygame.cue gap-- vmode\n", argv[0]);
-		printf("%s mygame.cue gap-- trainer\n", argv[0]);
-		printf("%s mygame.cue gap++ vmode IMAGE0.VCD\n", argv[0]);
-		printf("%s mygame.cue gap-- vmode IMAGE0.VCD\n", argv[0]);
-		printf("%s mygame.cue gap++ trainer IMAGE0.VCD\n", argv[0]);
-		printf("%s mygame.cue gap-- trainer IMAGE0.VCD\n", argv[0]);
-		printf("%s mygame.cue gap++ vmode trainer IMAGE0.VCD\n", argv[0]);
-		printf("%s mygame.cue gap-- vmode trainer IMAGE0.VCD\n", argv[0]);
-		printf("Commands and output file are optional.\n\n");
+		fprintf(stderr, "Error: No input file specified (cue sheet)\n\n");
+		fprintf(stderr, "Usage :\n");
+		fprintf(stderr, "%s input.cue <cmd_1> <cmd_2> <cmd_3> <output.vcd>\n\n", argv[0]);
+		fprintf(stderr, "Commands are :\n");
+		fprintf(stderr, "gap++ : Adds 2 seconds to all track indexes MSF\n");
+		fprintf(stderr, "gap-- : Substracts 2 seconds to all track indexes MSF\n");
+		fprintf(stderr, "vmode : Attempts to patch the video mode to NTSC and to fix the screen position\n");
+		fprintf(stderr, "trainer : Enable cheats\n");
+		fprintf(stderr, "debug : program behaves as if it was compiled on debug mode\n\n");
+		fprintf(stderr, "Examples :\n");
+		fprintf(stderr, "%s mygame.cue\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue IMAGE0.VCD\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue vmode\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue gap++\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue gap--\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue trainer\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue vmode IMAGE0.VCD\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue gap++ IMAGE0.VCD\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue gap-- IMAGE0.VCD\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue trainer IMAGE0.VCD\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue gap++ vmode\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue gap++ trainer\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue gap-- vmode\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue gap-- trainer\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue gap++ vmode IMAGE0.VCD\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue gap-- vmode IMAGE0.VCD\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue gap++ trainer IMAGE0.VCD\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue gap-- trainer IMAGE0.VCD\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue gap++ vmode trainer IMAGE0.VCD\n", argv[0]);
+		fprintf(stderr, "%s mygame.cue gap-- vmode trainer IMAGE0.VCD\n", argv[0]);
+		fprintf(stderr, "Commands and output file are optional.\n\n");
 		return 0;
 	}
 
@@ -449,7 +449,7 @@ int main(int argc, char **argv)
 	}
 
 	if (is_cue(cue_name) == 0) {
-		printf("input .cue file: %s did not exist\n", cue_name);
+		fprintf(stderr, "input .cue file: %s did not exist\n", cue_name);
 		return 0;
 	}
 
@@ -457,18 +457,18 @@ int main(int argc, char **argv)
 		//Output file name was not defined. Assume it is the same as the input but with a .VCD ending
 		vcd_name = strdup(argv[1]);
 		if (vcd_name == NULL) {
-			printf("Error: Failed to copy destination string\n");
+			fprintf(stderr, "Error: Failed to copy destination string\n");
 			return 0;
 		}
 
 		if (convert_file_ending_to_vcd(vcd_name)) {
-			printf("Error: Failed to change file ending to .VCD\n");
+			fprintf(stderr, "Error: Failed to change file ending to .VCD\n");
 			return 0;
 		}
 	}
 
 	if(params.gap_more == 1 && params.gap_less == 1) { // User is dumb
-		printf("Syntax Error : Conflicting gap++/gap-- arguments.\n\n");
+		fprintf(stderr, "Syntax Error : Conflicting gap++/gap-- arguments.\n\n");
 		return 0;
 	}
 
@@ -483,26 +483,26 @@ int main(int argc, char **argv)
 
 	cue_size = get_file_size(cue_name);
 	if (cue_size < 0) {
-		printf("Failed to open cuefile %s, error %s\n", argv[1], strerror(errno));
+		fprintf(stderr, "Failed to open cuefile %s, error %s\n", argv[1], strerror(errno));
 		return 0;
 	}
 
 	cue_file = fopen(cue_name, "rb");
 	if (cue_file == NULL) {
-		printf("Failed to open cuefile %s, error %s\n", argv[1], strerror(errno));
+		fprintf(stderr, "Failed to open cuefile %s, error %s\n", argv[1], strerror(errno));
 		return 0;
 	}
 
 	rewind(cue_file);
 	cue_buf = malloc(cue_size * 2);
 	if (cue_buf == NULL) {
-		printf("Failed to allocate memory for the cue buffer\n");
+		fprintf(stderr, "Failed to allocate memory for the cue buffer\n");
 		return 0;
 	}
 
 	result = fread(cue_buf, cue_size, 1, cue_file);
 	if (result != 1) {
-		printf("Failed to copy the cue to memory\n");
+		fprintf(stderr, "Failed to copy the cue to memory\n");
 		free(cue_buf);
 		return 0;
 	}
@@ -511,7 +511,7 @@ int main(int argc, char **argv)
 	cue_ptr = strstr(cue_buf, "INDEX 01 ");
 	cue_ptr += 9;
 	if((cue_ptr[0] != '0') || (cue_ptr[1] != '0')) {
-		printf("Error: The cue sheet is not valid\n\n");
+		fprintf(stderr, "Error: The cue sheet is not valid\n\n");
 		free(cue_buf);
 		return 0;
 	}
@@ -519,7 +519,7 @@ int main(int argc, char **argv)
 	cue_ptr = strstr(cue_buf, "FILE ");
 	cue_ptr += 5; // Jump to the BINARY name/path starting with " (it's right after "FILE ")
 	if(cue_ptr[0] != '"') {
-		printf("Error: The cue sheet is not valid\n\n");
+		fprintf(stderr, "Error: The cue sheet is not valid\n\n");
 		free(cue_buf);
 		return 0;
 	}
@@ -533,7 +533,7 @@ int main(int argc, char **argv)
 
 	bin_path = malloc((strlen(cue_ptr) + strlen(cue_name)) * 2);
 	if (bin_path == NULL) {
-		printf("Error: Failed to allocate memory for the bin_path string\n");
+		fprintf(stderr, "Error: Failed to allocate memory for the bin_path string\n");
 		free(cue_buf);
 		return 0;
 	}
@@ -584,7 +584,7 @@ int main(int argc, char **argv)
 
 	headerbuf = malloc(HEADERSIZE * 2);
 	if (headerbuf == NULL) {
-		printf("Error: Failed to allocate header buffer\n");
+		fprintf(stderr, "Error: Failed to allocate header buffer\n");
 		return 0;
 	}
 
@@ -665,7 +665,7 @@ int main(int argc, char **argv)
 			printf("Disc Type Check : Is MODE2/2352\n");
 		}
 	} else { // 2013/05/16, v2.0 : Not MODE2/2352, tell the user and terminate
-		printf("Error: Looks like your game dump is not MODE2/2352, or the cue is invalid.\n\n");
+		fprintf(stderr, "Error: Looks like your game dump is not MODE2/2352, or the cue is invalid.\n\n");
 		free(cue_buf);
 		free(bin_path);
 		free(headerbuf);
@@ -719,21 +719,21 @@ int main(int argc, char **argv)
 		printf("binary_count    = %d\n\n", binary_count);
 	}
 	if(binary_count == 0) { // WTF ?
-		printf("Error: Unstandard cue sheet\n\n");
+		fprintf(stderr, "Error: Unstandard cue sheet\n\n");
 		free(cue_buf);
 		free(bin_path);
 		free(headerbuf);
 		return 0;
 	}
 	if((track_count == 0) || (track_count != index1_count)) { // Huh ?
-		printf("Error: Cannot count tracks\n\n");
+		fprintf(stderr, "Error: Cannot count tracks\n\n");
 		free(cue_buf);
 		free(bin_path);
 		free(headerbuf);
 		return 0;
 	}
 	if(binary_count != 1 || wave_count != 0) { // I urd u liek warez^^
-		printf("Error: Cue sheets of splitted dumps aren't supported\n\n");
+		fprintf(stderr, "Error: Cue sheets of splitted dumps aren't supported\n\n");
 		free(cue_buf);
 		free(bin_path);
 		free(headerbuf);
@@ -1060,7 +1060,7 @@ int main(int argc, char **argv)
 	}
 
 	if (sizeof(sector_count) != 4) {
-		printf("Error: sector_count variable is not 4 bytes. This will break the header generation.\n");
+		fprintf(stderr, "Error: sector_count variable is not 4 bytes. This will break the header generation.\n");
 		return 0;
 	}
 
@@ -1074,7 +1074,7 @@ int main(int argc, char **argv)
 
 	outbuf = malloc(HEADERSIZE);
 	if (outbuf == NULL) {
-		printf("Failed to allocate output buffer\n");
+		fprintf(stderr, "Failed to allocate output buffer\n");
 		free(bin_path);
 		free(headerbuf);
 		return 0;
@@ -1082,7 +1082,7 @@ int main(int argc, char **argv)
 
 	printf("Saving the virtual CD-ROM image. Please wait...\n");
 	if(!(vcd_file = fopen(vcd_name, "wb"))) {
-		printf("Error: Cannot write to %s\n\n", vcd_name);
+		fprintf(stderr, "Error: Cannot write to %s\n\n", vcd_name);
 		free(bin_path);
 		free(headerbuf);
 		free(outbuf);
@@ -1093,14 +1093,14 @@ int main(int argc, char **argv)
 	free(headerbuf);
 
 	if(!(vcd_file = fopen(vcd_name, "ab+"))) {
-		printf("Error: Cannot write to %s\n\n", vcd_name);
+		fprintf(stderr, "Error: Cannot write to %s\n\n", vcd_name);
 		free(bin_path);
 		free(outbuf);
 		return 0;
 	}
 
 	if(!(bin_file = fopen(bin_path, "rb"))) {
-		printf("Error: Cannot open %s\n\n", bin_path);
+		fprintf(stderr, "Error: Cannot open %s\n\n", bin_path);
 		free(bin_path);
 		free(outbuf);
 		return 0;
@@ -1113,7 +1113,7 @@ int main(int argc, char **argv)
 
 			padding = malloc((150 * SECTORSIZE) * 2);
 			if (padding == NULL) {
-				printf("Failed to allocate padding.\n");
+				fprintf(stderr, "Failed to allocate padding.\n");
 				free(outbuf);
 				return 0;
 			}
@@ -1162,12 +1162,12 @@ int main(int argc, char **argv)
 		}
 	}
 	if(params.game_title >= 0 && params.fix_game == 1 && params.game_fixed == 0) {
-		printf("COULD NOT APPLY THE GAME FIXE(S) : No data to patch found\n");
-		printf("----------------------------------------------------------------------------------\n");
+		fprintf(stderr, "COULD NOT APPLY THE GAME FIXE(S) : No data to patch found\n");
+		fprintf(stderr, "----------------------------------------------------------------------------------\n");
 	}
 	if(params.game_title >= 0 && params.game_has_cheats == 1 && params.game_trained == 0 && params.trainer == 1) {
-		printf("COULD NOT APPLY THE GAME CHEAT(S) : No data to patch found\n");
-		printf("----------------------------------------------------------------------------------\n");
+		fprintf(stderr, "COULD NOT APPLY THE GAME CHEAT(S) : No data to patch found\n");
+		fprintf(stderr, "----------------------------------------------------------------------------------\n");
 	}
 
 	free(outbuf);
