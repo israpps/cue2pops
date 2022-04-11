@@ -384,7 +384,7 @@ enum RETCODES
 	CANT_ALLOCATE_PADDING,
 	
 	
-}
+};
 
 int main(int argc, char **argv)
 {
