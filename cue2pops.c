@@ -358,6 +358,34 @@ int get_lead_out(unsigned char *hbuf, int b_size, int *sector_count)
 	return 0;
 }
 
+enum RETCODES
+{
+	SUCCESS = 0,
+	ARGV_ISSUE,
+	CANT_OPEN_CUE,
+	CANT_HANDLE_DRAG_N_DROP,
+	CANT_HANDLE_DRAG_N_DROP_FILE_ENDING,
+	GAPS_CONFLICT,
+	CUE_SIZE_LESS_THAN_0,
+	CANT_ALLOCATE_CUE_BUF,
+	CANT_WRITE_CUE_2_MEMORY,
+	INVALID_CUE,
+	CANT_ALLOCATE_BIN_PATH,
+	CANT_ALLOCATE_HEAD_BUFF,
+	NO_MODE2_2352,
+	NO_BINARY_ON_CUE,
+	CANT_COUNT_TRACKS_ON_CUE,
+	MULTI_BIN_GAME,
+	BIN_SIZE_LESS_THAN_0,
+	ERROR_GET_LEAD_OUT,
+	CANT_ALLOCATE_OUTBUF,
+	CANT_WRITE_TO_OUTPUT_VCD,
+	CANT_OPEN_BIN,
+	CANT_ALLOCATE_PADDING,
+	
+	
+}
+
 int main(int argc, char **argv)
 {
 	FILE *bin_file; //bin_file is used for opening the BIN that's attached to the cue.
@@ -435,7 +463,7 @@ int main(int argc, char **argv)
 		fprintf(stderr, "%s mygame.cue gap++ vmode trainer IMAGE0.VCD\n", argv[0]);
 		fprintf(stderr, "%s mygame.cue gap-- vmode trainer IMAGE0.VCD\n", argv[0]);
 		fprintf(stderr, "Commands and output file are optional.\n\n");
-		return 0;
+		return ARGV_ISSUE;
 	}
 
 	//Parse commands
@@ -450,7 +478,7 @@ int main(int argc, char **argv)
 
 	if (is_cue(cue_name) == 0) {
 		fprintf(stderr, "input .cue file: %s did not exist\n", cue_name);
-		return 0;
+		return CANT_OPEN_CUE;
 	}
 
 	if (vcd_name == NULL) {
@@ -458,18 +486,18 @@ int main(int argc, char **argv)
 		vcd_name = strdup(argv[1]);
 		if (vcd_name == NULL) {
 			fprintf(stderr, "Error: Failed to copy destination string\n");
-			return 0;
+			return CANT_HANDLE_DRAG_N_DROP;
 		}
 
 		if (convert_file_ending_to_vcd(vcd_name)) {
 			fprintf(stderr, "Error: Failed to change file ending to .VCD\n");
-			return 0;
+			return CANT_HANDLE_DRAG_N_DROP_FILE_ENDING;
 		}
 	}
 
 	if(params.gap_more == 1 && params.gap_less == 1) { // User is dumb
 		fprintf(stderr, "Syntax Error : Conflicting gap++/gap-- arguments.\n\n");
-		return 0;
+		return GAPS_CONFLICT;
 	}
 
 	if(debug != 0) {
@@ -484,27 +512,27 @@ int main(int argc, char **argv)
 	cue_size = get_file_size(cue_name);
 	if (cue_size < 0) {
 		fprintf(stderr, "Failed to open cuefile %s, error %s\n", argv[1], strerror(errno));
-		return 0;
+		return CUE_SIZE_LESS_THAN_0;
 	}
 
 	cue_file = fopen(cue_name, "rb");
 	if (cue_file == NULL) {
 		fprintf(stderr, "Failed to open cuefile %s, error %s\n", argv[1], strerror(errno));
-		return 0;
+		return CANT_OPEN_CUE;
 	}
 
 	rewind(cue_file);
 	cue_buf = malloc(cue_size * 2);
 	if (cue_buf == NULL) {
 		fprintf(stderr, "Failed to allocate memory for the cue buffer\n");
-		return 0;
+		return CANT_ALLOCATE_CUE_BUF;
 	}
 
 	result = fread(cue_buf, cue_size, 1, cue_file);
 	if (result != 1) {
 		fprintf(stderr, "Failed to copy the cue to memory\n");
 		free(cue_buf);
-		return 0;
+		return CANT_WRITE_CUE_2_MEMORY;
 	}
 	fclose(cue_file);
 
@@ -513,7 +541,7 @@ int main(int argc, char **argv)
 	if((cue_ptr[0] != '0') || (cue_ptr[1] != '0')) {
 		fprintf(stderr, "Error: The cue sheet is not valid\n\n");
 		free(cue_buf);
-		return 0;
+		return INVALID_CUE;
 	}
 
 	cue_ptr = strstr(cue_buf, "FILE ");
@@ -521,7 +549,7 @@ int main(int argc, char **argv)
 	if(cue_ptr[0] != '"') {
 		fprintf(stderr, "Error: The cue sheet is not valid\n\n");
 		free(cue_buf);
-		return 0;
+		return INVALID_CUE;
 	}
 
 	for(i = 0; i < cue_size; i++) {
@@ -535,7 +563,7 @@ int main(int argc, char **argv)
 	if (bin_path == NULL) {
 		fprintf(stderr, "Error: Failed to allocate memory for the bin_path string\n");
 		free(cue_buf);
-		return 0;
+		return CANT_ALLOCATE_BIN_PATH;
 	}
 
 	for(i = strlen(cue_ptr); i > 0; i--) { // Does the cue have the full BINARY path ?
@@ -585,7 +613,7 @@ int main(int argc, char **argv)
 	headerbuf = malloc(HEADERSIZE * 2);
 	if (headerbuf == NULL) {
 		fprintf(stderr, "Error: Failed to allocate header buffer\n");
-		return 0;
+		return CANT_ALLOCATE_HEAD_BUFF;
 	}
 
 	/*******************************************************************************************************
@@ -669,7 +697,7 @@ int main(int argc, char **argv)
 		free(cue_buf);
 		free(bin_path);
 		free(headerbuf);
-		return 0;
+		return NO_MODE2_2352;
 	}
 
 	//FIXME: Migrate to function
@@ -723,21 +751,21 @@ int main(int argc, char **argv)
 		free(cue_buf);
 		free(bin_path);
 		free(headerbuf);
-		return 0;
+		return NO_BINARY_ON_CUE;
 	}
 	if((track_count == 0) || (track_count != index1_count)) { // Huh ?
 		fprintf(stderr, "Error: Cannot count tracks\n\n");
 		free(cue_buf);
 		free(bin_path);
 		free(headerbuf);
-		return 0;
+		return CANT_COUNT_TRACKS_ON_CUE;
 	}
 	if(binary_count != 1 || wave_count != 0) { // I urd u liek warez^^
-		fprintf(stderr, "Error: Cue sheets of splitted dumps aren't supported\n\n");
+		fprintf(stderr, "Error: Cue sheets of splitted dumps aren't supported\n\tPlease use BinMerge->[github.com/putnam/binmerge] or Binmerger->[github.com/israpps/BinMerger] to create a single bin image\n\n");
 		free(cue_buf);
 		free(bin_path);
 		free(headerbuf);
-		return 0;
+		return MULTI_BIN_GAME;
 	}
 
 	if(pregap_count == 1 && postgap_count == 0) { // Don't offer to fix the dump if more than 1 pregap was found or cue has postgaps
@@ -1042,13 +1070,13 @@ int main(int argc, char **argv)
 	if (bin_size < 0) {
 		free(bin_path);
 		free(headerbuf);
-		return 0;
+		return BIN_SIZE_LESS_THAN_0;
 	}
 
 	if(get_lead_out(headerbuf, bin_size, &sector_count) != 0) {
 		free(bin_path);
 		free(headerbuf);
-		return 0;
+		return ERROR_GET_LEAD_OUT;
 	}
 
 	if(noCDDA == 1) {
@@ -1077,7 +1105,7 @@ int main(int argc, char **argv)
 		fprintf(stderr, "Failed to allocate output buffer\n");
 		free(bin_path);
 		free(headerbuf);
-		return 0;
+		return CANT_ALLOCATE_OUTBUF;
 	}
 
 	printf("Saving the virtual CD-ROM image. Please wait...\n");
@@ -1086,7 +1114,7 @@ int main(int argc, char **argv)
 		free(bin_path);
 		free(headerbuf);
 		free(outbuf);
-		return 0;
+		return CANT_WRITE_TO_OUTPUT_VCD;
 	}
 	fwrite(headerbuf, 1, HEADERSIZE, vcd_file);
 	fclose(vcd_file);
@@ -1096,14 +1124,14 @@ int main(int argc, char **argv)
 		fprintf(stderr, "Error: Cannot write to %s\n\n", vcd_name);
 		free(bin_path);
 		free(outbuf);
-		return 0;
+		return CANT_WRITE_TO_OUTPUT_VCD;
 	}
 
 	if(!(bin_file = fopen(bin_path, "rb"))) {
 		fprintf(stderr, "Error: Cannot open %s\n\n", bin_path);
 		free(bin_path);
 		free(outbuf);
-		return 0;
+		return CANT_OPEN_BIN;
 	}
 	free(bin_path);
 
@@ -1115,7 +1143,7 @@ int main(int argc, char **argv)
 			if (padding == NULL) {
 				fprintf(stderr, "Failed to allocate padding.\n");
 				free(outbuf);
-				return 0;
+				return CANT_ALLOCATE_PADDING;
 			}
 
 			if(debug != 0) {
@@ -1176,7 +1204,7 @@ int main(int argc, char **argv)
 
 	printf("A POPS virtual CD-ROM image was saved to :\n");
 	printf("%s\n\n", vcd_name);
-	return 1;
+	return 0;
 
 }
 /* EOSRC, oh mah dayum */
