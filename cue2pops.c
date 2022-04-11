@@ -483,7 +483,7 @@ int main(int argc, char **argv)
 
 	if (vcd_name == NULL) {
 		//Output file name was not defined. Assume it is the same as the input but with a .VCD ending
-		vcd_name = strdup(argv[1]);
+		vcd_name = strdup(cue_name);
 		if (vcd_name == NULL) {
 			fprintf(stderr, "Error: Failed to copy destination string\n");
 			return CANT_HANDLE_DRAG_N_DROP;
