@@ -43,7 +43,7 @@ jobs:
       if: matrix.toolchain == 'windows-static-x86'
       run: |
         cd build
-        7z a -t7z Cue2POPS-${{ matrix.toolchain }}.7z "drag&drop.bat" batch_convert.bat
+        7z a -t7z Cue2POPS-${{ matrix.toolchain }}.7z "../drag&drop.bat" ../batch_convert.bat
 
     - name: Upload artifacts
       if: ${{ success() }}
