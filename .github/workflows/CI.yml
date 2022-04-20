@@ -12,8 +12,11 @@ on:
 
 jobs:
   build-win:
+    strategy:
+     matrix:
+       toolchain: ["windows-static-x86","linux-x86"]
     runs-on: ubuntu-latest
-    container: dockcross/windows-static-x86:latest
+    container: dockcross/${{ matrix.toolchain }}:latest
     steps:
 
     - uses: actions/checkout@v2
@@ -29,15 +32,23 @@ jobs:
         cd build
         cmake .. -DCMAKE_BUILD_TYPE=Release
         make clean all
-        7z a -t7z Cue2POPS.7z cue2pops.exe ../README.TXT ../PATCHES.TXT "../drag&drop.bat"  ../batch_convert.bat
-        
+
+    - name: compress
+      run: |
+        7z a -t7z Cue2POPS-${{ matrix.toolchain }}.7z cue2pops* ../README.TXT ../PATCHES.TXT
+
+    - name: "compress (windows-only files)"
+      if: matrix.toolchain == 'windows-static-x86'
+      run: |
+        7z a -t7z Cue2POPS-${{ matrix.toolchain }}.7z "drag&drop.bat" batch_convert.bat
+
     - name: Upload artifacts
       if: ${{ success() }}
       uses: actions/upload-artifact@v2
       with:
-        name: Cue2POPS
+        name: Cue2POPS-${{ matrix.toolchain }}
         path: |
-             build/Cue2POPS.7z
+             build/Cue2POPS*.7z
              
     - name: Deploy pre-release
       uses: softprops/action-gh-release@v1
@@ -46,7 +57,7 @@ jobs:
         token: "${{ secrets.GITHUB_TOKEN }}"
         fail_on_unmatched_files: true
         files: |
-            build/Cue2POPS.7z
+            build/Cue2POPS*.7z
         name: "Latest build"
         tag_name: "Latest"
         prerelease: true
