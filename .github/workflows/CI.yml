@@ -36,7 +36,7 @@ jobs:
 
     - name: compress
       run: |
-        7z a -t7z Cue2POPS-${{ matrix.toolchain }}.7z cue2pops* ../README.TXT ../PATCHES.TXT
+        7z a -t7z Cue2POPS-${{ matrix.toolchain }}.7z ../README.TXT ../PATCHES.TXT cue2pops*
 
     - name: "compress (windows-only files)"
       if: matrix.toolchain == 'windows-static-x86'
