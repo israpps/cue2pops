@@ -37,8 +37,11 @@ typedef struct {
 	int game_fixed;
 } parameters;
 
-
+#ifdef __unix__
+#include <errno.h>
+#elif defined(_WIN32) || defined(WIN32)
 extern int errno;
+#endif
 
 void game_identifier(unsigned char *inbuf, parameters *p)
 {
