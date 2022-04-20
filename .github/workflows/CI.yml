@@ -11,7 +11,7 @@ on:
     types: [run_build]
 
 jobs:
-  build-win:
+  build:
     strategy:
      matrix:
        toolchain: ["windows-static-x86","linux-x86"]
