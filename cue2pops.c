@@ -1139,18 +1139,19 @@ int main(int argc, char **argv)
 	free(bin_path);
 
 	for(i = 0; i < bin_size; i += HEADERSIZE) {
+		printf("%i/%i\r", i, bin_size);
 		if(fix_CDRWIN == 1 && (i + HEADERSIZE >= daTrack_ptr)) {
 			char *padding;
 
 			padding = malloc((150 * SECTORSIZE) * 2);
 			if (padding == NULL) {
-				fprintf(stderr, "Failed to allocate padding.\n");
+				fprintf(stderr, "\nFailed to allocate padding.\n");
 				free(outbuf);
 				return CANT_ALLOCATE_PADDING;
 			}
 
 			if(debug != 0) {
-				printf("Padding the CDRWIN dump inside of the virtual CD-ROM image...");
+				printf("\nPadding the CDRWIN dump inside of the virtual CD-ROM image...\n");
 			}
 			fread(outbuf, HEADERSIZE - (i + HEADERSIZE - daTrack_ptr), 1, bin_file);
 			fwrite(outbuf, HEADERSIZE - (i + HEADERSIZE - daTrack_ptr), 1, vcd_file);
@@ -1164,17 +1165,17 @@ int main(int argc, char **argv)
 			}
 		} else {
 			if(params.vmode == 1 && i == 0) {
-				printf("----------------------------------------------------------------------------------\n");
-				printf("NTSC Patcher is ON\n");
-				printf("----------------------------------------------------------------------------------\n");
+				printf("\n----------------------------------------------------------------------------------\n");
+				printf("\nNTSC Patcher is ON\n");
+				printf("\n----------------------------------------------------------------------------------\n");
 			}
 			fread(outbuf, HEADERSIZE, 1, bin_file);
 			if(i == 0) {
 				game_identifier(outbuf, &params);
 			}
 			if(params.game_title >= 0 && params.game_has_cheats == 1 && params.trainer == 1 && i == 0) {
-				printf("game_trainer is ON\n");
-				printf("----------------------------------------------------------------------------------\n");
+				printf("\ngame_trainer is ON\n");
+				printf("\n----------------------------------------------------------------------------------\n");
 			}
 			if(params.game_title >= 0 && params.game_trained == 0 && params.game_has_cheats == 1 && params.trainer == 1 && i <= daTrack_ptr) {
 				game_trainer(outbuf, &params);
