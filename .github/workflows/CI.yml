@@ -11,10 +11,23 @@ on:
     types: [run_build]
 
 jobs:
+  clean_release:
+    runs-on: ubuntu-latest
+    steps:
+    - name: delete previous tag/release
+      if: github.ref == 'refs/heads/master'
+      uses: dev-drprasad/delete-tag-and-release@v0.2.0
+      with:
+        delete_release: true
+        tag_name: "latest"
+      env:
+       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
   build:
+    needs: [clean_release]
     strategy:
      matrix:
-       toolchain: ["windows-static-x86","linux-x86"]
+       toolchain: ["windows-static-x86", "linux-x86", "windows-static-x64", "linux-x64"]
     runs-on: ubuntu-latest
     container: dockcross/${{ matrix.toolchain }}:latest
     steps:
@@ -41,7 +54,7 @@ jobs:
         7z a -t7z Cue2POPS-${{ matrix.toolchain }}.7z cue2pops* ../README.TXT ../PATCHES.TXT
 
     - name: "compress (windows-only files)"
-      if: matrix.toolchain == 'windows-static-x86'
+      if:  == contains('windows', matrix.toolchain )
       run: |
         cd build
         7z a -t7z Cue2POPS-${{ matrix.toolchain }}.7z "../drag&drop.bat" ../batch_convert.bat
