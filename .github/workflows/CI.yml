@@ -41,8 +41,8 @@ jobs:
     - name: Compile project
       run: |
         DATEE=`date '+[%Y-%m-%d]'`
-        echo "package compiled and released on $DATEE" >>README.TXT
-        echo "Commit  ${{ github.sha }}" >>README.TXT
+        echo "package compiled and released on $DATEE" >>README.KD
+        echo "Commit  ${{ github.sha }}" >>README.MD
         mkdir build
         cd build
         cmake .. -DCMAKE_BUILD_TYPE=Release
@@ -51,7 +51,7 @@ jobs:
     - name: compress
       run: |
         cd build
-        7z a -t7z Cue2POPS-${{ matrix.toolchain }}.7z cue2pops* ../README.TXT ../PATCHES.TXT
+        7z a -t7z Cue2POPS-${{ matrix.toolchain }}.7z cue2pops* ../README.MD ../PATCHES.TXT
 
     - name: "compress (windows-only files)"
       if: contains(matrix.toolchain, 'windows')
