@@ -54,7 +54,7 @@ jobs:
         7z a -t7z Cue2POPS-${{ matrix.toolchain }}.7z cue2pops* ../README.TXT ../PATCHES.TXT
 
     - name: "compress (windows-only files)"
-      if: contains('windows', matrix.toolchain )
+      if: contains(matrix.toolchain, 'windows')
       run: |
         cd build
         7z a -t7z Cue2POPS-${{ matrix.toolchain }}.7z "../drag&drop.bat" ../batch_convert.bat
