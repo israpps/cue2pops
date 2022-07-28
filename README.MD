@@ -49,15 +49,21 @@ recompiled and tweaked by El_isra (thanks to the original author...)
 
 
 Manual pregap correction is normally not needed.
+
 If for some reason the audio tracks of your game don't start at their correct location, try to adjust their MSF with the command "gap++" or "gap--".
 
 `gap++` adds 2 seconds to the MSF of your tracks. Example :
+
 Incorrect MSF : 02:34:00 (2 minutes, 34 seconds, 0 frames)
+
 Corrected MSF : 02:36:00 (2 minutes, 36 seconds, 0 frames)
 
 `gap--` substracts 2 seconds to the MSF of your tracks. Example :
+
 Incorrect MSF : 02:34:00 (2 minutes, 34 seconds, 0 frames)
+
 Corrected MSF : 02:32:00 (2 minutes, 32 seconds, 0 frames)
+
 
 __Using POPStarter r10+ and CodeBreaker OSD.BIN you can listen to your game CDDA tracks and verify that it's properly fixed.__
 
@@ -65,21 +71,28 @@ __Using POPStarter r10+ and CodeBreaker OSD.BIN you can listen to your game CDDA
 ## PAL -> NTSC PATCHER (vmode)
 
 Does not resize the display and may be unable to fix all games.
+
 The NTSC Patcher is activated when the command "vmode" is specified.
+
 GS Mode Selector gives way better results.
 
 
 ## GAME FIXES AND CHEATS
 
 Implemented since CUE2POPS v2.0.
+
 Game fixes (of the internal function "GameFixer") are automatically applied and there's currently no way to enable/disable that feature.
+
 Game cheats (of the function "GameTrainer") are patched to the output IMAGE0.VCD when the command "trainer" is specified, and only if the game was recognized by the title identification system.
+
 You may find a list of integrated cheats & fixes, PATCHES.TXT, in this package.
  
 ## THE TITLE IDENTIFICATION SYSTEM
 
 The title identification system searches for a certain sequence of bytes in your game dump for the game identification purpose.
+
 If your game was improperly dumped or it's a homemade "compilation" of games in one disc, the identification may fail.
+
 That game identification thing is used to set up parameters of :
 - The GameFixer
 - The GameTrainer
@@ -100,17 +113,21 @@ FILE "MY_GAME.BIN" BINARY
 ```
 
 If you get the error message "Error: The cue sheet is not valid", please verify the syntax of your CUE.
+
 Example of bad syntax : "TRACK 1" (incorrect) instead of "TRACK 01" (correct)...
 
-
 The disc standard for the PlayStation/PSone and POPS is __Mode 2, 2352 bytes per sector (MODE2/2352)__, __NOT ISO Mode 1, 2048 bytes per sector (MODE1/2048)__.
+
 If you get the error message "Error: Looks like your game dump is not MODE2/2352, or the cue is invalid." and if your cue sheet mentions "TRACK 01 MODE1/2048",
+
 then your dump is a pile of trash.
 
 
 CUE2POPS only supports stand alone BINs and does not work with dumps that have one separate file for each track.
+
 If you get the error message "Error: Cue sheets of splitted dumps aren't supported" and if your game dump is splitted in multiple files for each track,
-please reassemble it in a single BIN, using a software such as CDmage or [BinMerger](github.com/israpps/BINMerger/releases).
+
+please reassemble it in a single BIN, using a software such as CDmage or [BinMerger](https://github.com/israpps/BINMerger/releases).
 
 ## CHANGELOG
 
