@@ -1137,7 +1137,7 @@ int main(int argc, char **argv)
 		return CANT_OPEN_BIN;
 	}
 	free(bin_path);
-	printf("total bin_size=%i\n", bin_size);
+	printf("%i -> Source bin size\n", bin_size);
 	for(i = 0; i < bin_size; i += HEADERSIZE) {
 		printf("%i bytes written\t%.1f%c\r",i , (float)i*100/(float)bin_size,'%');
 		if(fix_CDRWIN == 1 && (i + HEADERSIZE >= daTrack_ptr)) {
