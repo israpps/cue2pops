@@ -14,14 +14,40 @@ jobs:
   clean_release:
     runs-on: ubuntu-latest
     steps:
-    - name: delete previous tag/release
-      if: github.ref == 'refs/heads/master'
-      uses: dev-drprasad/delete-tag-and-release@v0.2.0
-      with:
-        delete_release: true
-        tag_name: "latest"
-      env:
-       GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Checkout
+        if: github.ref == 'refs/heads/master'
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Create changelog
+        if: github.ref == 'refs/heads/master'
+        run: |
+          echo "![Downloads](https://img.shields.io/github/downloads/${{ github.repository }}/Latest/total)">CHANGELOG.MD
+          echo Latest changes:>>CHANGELOG.MD
+          if [ $(git tag -l "Latest") ]; then COMPARISON="Latest..HEAD"; else COMPARISON=""; fi
+          git --no-pager log $COMPARISON --pretty=format:"- %h  %<(18)%an: %s">>CHANGELOG.MD
+          cat CHANGELOG.MD
+
+      - name: delete previous tag/release
+        if: github.ref == 'refs/heads/master'
+        uses: dev-drprasad/delete-tag-and-release@v0.2.0
+        with:
+          delete_release: true
+          tag_name: "Latest"
+        env:
+         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Deploy pre-release
+        uses: softprops/action-gh-release@v1
+        if: github.ref == 'refs/heads/master'
+        with:
+          body_path: CHANGELOG.MD
+          token: "${{ secrets.GITHUB_TOKEN }}"
+          fail_on_unmatched_files: false
+          name: "Latest build"
+          tag_name: "latest"
+          prerelease: true
 
   build:
     needs: [clean_release]
