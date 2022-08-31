@@ -46,7 +46,7 @@ jobs:
           token: "${{ secrets.GITHUB_TOKEN }}"
           fail_on_unmatched_files: false
           name: "Latest build"
-          tag_name: "latest"
+          tag_name: "Latest"
           prerelease: true
 
   build:
