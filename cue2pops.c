@@ -8,7 +8,7 @@
 #include <memory.h>
 #include <inttypes.h>
 #include <time.h>
-
+#define GAUGE "=========================================================================================="
 #ifdef DEBUG
   int debug = 1;
 #else
@@ -35,6 +35,7 @@ typedef struct {
 	int game_title;
 	int game_trained;
 	int game_fixed;
+	int gauge;
 } parameters;
 
 #ifdef __unix__
@@ -270,6 +271,8 @@ int evaluate_arg(const char *arg, parameters *p)
 		p->trainer = 1;
 	} else if(!strcmp(arg, "debug")) {
 		debug = 1;
+	} else if(!strcmp(arg, "gauge")) {
+		p->gauge = 1;
 	} else {
 		handled = 0;
 	}
@@ -1139,7 +1142,11 @@ int main(int argc, char **argv)
 	free(bin_path);
 	printf("%i -> Source bin size\n", bin_size);
 	for(i = 0; i < bin_size; i += HEADERSIZE) {
-		printf("%i bytes written\t%.1f%c\r",i , (float)i*100/(float)bin_size,'%');
+		float progress = (float)i*100/(float)bin_size;
+		if (!params.gauge)
+			printf("\r%i bytes written\t%.1f%c",i , progress,'%');
+		else
+			printf("\r%.1f [%.*s%*s]", progress, progress, GAUGE, (int)(100-progress), "");
 		if(fix_CDRWIN == 1 && (i + HEADERSIZE >= daTrack_ptr)) {
 			char *padding;
 
