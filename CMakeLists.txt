@@ -6,5 +6,5 @@ project(cue2pops)
 # add the executable
 #include_directories(include)
 add_executable(cue2pops
-				cue2pops.c
+    cue2pops.c
 )
