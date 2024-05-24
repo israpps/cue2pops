@@ -9,6 +9,9 @@
 #include <inttypes.h>
 #include <time.h>
 
+void genericgauge (float progress, size_t extra);
+void genericgaugepercent(int percent, size_t extra);
+
 #ifdef DEBUG
 int debug = 1;
 #else
@@ -1331,7 +1334,8 @@ int main(int argc, char **argv)
     printf("%i -> Source bin size\n", bin_size);
     for(i = 0; i < bin_size; i += HEADERSIZE)
     {
-        printf("%i bytes written\t%.1f%c\r",i, (float)i*100/(float)bin_size,'%');
+        //printf("%i bytes written\t%.1f%c\r",i, (float)i*100/(float)bin_size,'%');
+	genericgaugepercent((i*100/bin_size), i);
         if(fix_CDRWIN == 1 && (i + HEADERSIZE >= daTrack_ptr))
         {
             char *padding;
@@ -1421,3 +1425,30 @@ int main(int argc, char **argv)
 
 }
 /* EOSRC, oh mah dayum */
+
+//---------------------------------------------------
+//float percentage values from 0 to 1 (decimal ofc)
+void
+genericgauge (float progress, size_t extra)
+{
+    int barWidth = 70;
+
+    printf("[");
+    int pos = barWidth * progress;
+    for (int i = 0; i < barWidth; ++i)
+	{
+	  if (i < pos)
+		printf("=");
+	  else if (i == pos)
+		printf(">");
+	  else
+		printf(" ");
+	}
+    printf("] %d%% (%lu)\r", progress * 100.0, extra);
+	
+}
+
+//percentage represented on signed integer. values from 0-100
+void genericgaugepercent(int percent, size_t extra) {
+    genericgauge(percent*0.01, extra);
+}
